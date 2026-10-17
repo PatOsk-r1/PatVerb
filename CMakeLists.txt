@@ -61,13 +61,17 @@ if(PATVERB_BUILD_PLUGIN)
         src/plugin/ui/Galaxy.cpp
         src/plugin/ui/Controls.cpp
     )
+    # Shared presets (presets/**/*.pvpreset, filled by tools/collect-presets.ps1) ship inside the plugin.
+    file(GLOB_RECURSE PATVERB_SHARED_PRESETS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/presets/*.pvpreset)
+    juce_add_binary_data(PatVerbPresetData HEADER_NAME PresetData.h NAMESPACE PresetData
+        SOURCES ${CMAKE_SOURCE_DIR}/presets/README.txt ${PATVERB_SHARED_PRESETS})
     target_compile_definitions(PatVerb PUBLIC
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0
         JUCE_DISPLAY_SPLASH_SCREEN=0)
     target_link_libraries(PatVerb
-        PRIVATE patverb_engine patverb_warnings juce::juce_audio_utils
+        PRIVATE patverb_engine patverb_warnings PatVerbPresetData juce::juce_audio_utils
         PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_lto_flags)
 endif()
 

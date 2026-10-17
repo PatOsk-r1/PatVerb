@@ -2,6 +2,8 @@
 
 #include "plugin/PluginProcessor.h"
 
+#include <PresetData.h>
+
 #include <initializer_list>
 #include <utility>
 
@@ -67,12 +69,28 @@ juce::File Presets::userDirectory() {
 void Presets::rescan() {
     entries_.clear();
     for (const auto& f : kFactory) entries_.push_back({f.name, f.category, true, {}});
-    numFactory_ = static_cast<int>(entries_.size());
+    numCode_ = static_cast<int>(entries_.size());
     const auto dir = userDirectory();
     auto files = dir.findChildFiles(juce::File::findFiles, true, "*.pvpreset");
     std::sort(files.begin(), files.end(), [&dir](const juce::File& a, const juce::File& b) {
         return a.getRelativePathFrom(dir).compareNatural(b.getRelativePathFrom(dir)) < 0;
     });
+    // Shared presets built into the plugin (tools/collect-presets.ps1); the author's own copy wins.
+    juce::StringArray userNames;
+    for (const auto& f : files) userNames.add(f.getFileNameWithoutExtension());
+    for (int i = 0; i < PresetData::namedResourceListSize; ++i) {
+        const juce::String original(PresetData::originalFilenames[i]);
+        if (!original.endsWithIgnoreCase(".pvpreset")) continue;
+        int size = 0;
+        const char* data = PresetData::getNamedResource(PresetData::namedResourceList[i], size);
+        auto xml = juce::XmlDocument::parse(juce::String::fromUTF8(data, size));
+        const auto name = original.upToLastOccurrenceOf(".", false, false);
+        if (!xml || userNames.contains(name)) continue;
+        Entry e{name, xml->getStringAttribute("category", "Community"), true, {}};
+        e.embedded = i;
+        entries_.push_back(e);
+    }
+    numFactory_ = static_cast<int>(entries_.size());
     for (const auto& f : files) {
         juce::String cat = "User";
         if (f.getParentDirectory() != dir) cat << "/" << f.getParentDirectory().getRelativePathFrom(dir).replaceCharacter('\\', '/');
@@ -89,7 +107,11 @@ bool Presets::load(int i) {
     if (i < 0 || i >= static_cast<int>(entries_.size())) return false;
     const auto& e = entries_[static_cast<std::size_t>(i)];
     juce::ValueTree patch("PatVerbPreset");
-    if (e.factory) {
+    if (e.embedded >= 0) {
+        int size = 0;
+        const char* data = PresetData::getNamedResource(PresetData::namedResourceList[e.embedded], size);
+        if (auto xml = juce::XmlDocument::parse(juce::String::fromUTF8(data, size))) patch = juce::ValueTree::fromXml(*xml);
+    } else if (e.factory && i < numCode_) {
         for (const auto& [p, v] : kFactory[i].values) patch.setProperty(juce::Identifier(std::string(info(p).key)), v, nullptr);
     } else if (auto xml = juce::XmlDocument::parse(e.file)) {
         patch = juce::ValueTree::fromXml(*xml);

@@ -14,6 +14,7 @@ public:
         juce::String name, category;  // category may be a path: "Producers/Pat Osk"
         bool factory = true;
         juce::File file;
+        int embedded = -1;  // index in the embedded shared-preset data
     };
 
     explicit Presets(PatVerbProcessor& p);
@@ -33,6 +34,6 @@ public:
 private:
     PatVerbProcessor& proc_;
     std::vector<Entry> entries_;
-    int numFactory_ = 0, current_ = 0;
+    int numFactory_ = 0, numCode_ = 0, current_ = 0;
     juce::String currentName_ = "Init";
 };
