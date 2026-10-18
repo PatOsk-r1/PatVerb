@@ -16,6 +16,7 @@ public:
     ~PatVerbEditor() override;
     void paint(juce::Graphics&) override;
     void resized() override;
+    bool keyPressed(const juce::KeyPress&) override { return false; }  // keys belong to the host
 
 private:
     class Content;

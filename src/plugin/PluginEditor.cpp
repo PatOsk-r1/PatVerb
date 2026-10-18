@@ -1,6 +1,7 @@
 #include "plugin/PluginEditor.h"
 
 #include "plugin/Presets.h"
+#include "plugin/ui/KeyboardFocus.h"
 
 #include <map>
 
@@ -181,6 +182,7 @@ PatVerbEditor::PatVerbEditor(PatVerbProcessor& p) : AudioProcessorEditor(&p), pr
     setSize(kWidth, kHeight);
     startTimerHz(30);
     if (juce::SystemStats::getEnvironmentVariable("PATVERB_SNAPSHOT", {}).isNotEmpty()) snapshotCountdown_ = 20;
+    pat::ui::releaseKeyboard(*this);  // keep the host's computer-keyboard MIDI working
 }
 
 PatVerbEditor::~PatVerbEditor() {
