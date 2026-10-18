@@ -50,12 +50,12 @@ const Factory kFactory[] = {
     {"Slow Galaxy", "Ambient", {{P::Mode, Cloud}, {P::Size, 0.95f}, {P::Decay, 12.0f}, {P::ModRate, 0.15f}, {P::ModDepth, 0.8f}, {P::Width, 1.4f}, {P::Mix, 0.5f}}},
 
     // Producers
-    {"Trap Vocal Verb", "Producers/Torbey Beats", {{P::Mode, Plate}, {P::Sync, 1.0f}, {P::Div, 3.0f}, {P::Decay, 1.6f}, {P::Duck, 0.5f}, {P::LowCut, 250.0f}, {P::Mix, 0.3f}}},
-    {"Dark Bell Space", "Producers/Torbey Beats", {{P::Mode, Hall}, {P::Size, 0.85f}, {P::Decay, 4.5f}, {P::Damping, 4500.0f}, {P::Sync, 1.0f}, {P::Div, 6.0f}, {P::Mix, 0.35f}}},
-    {"Night Pad Air", "Producers/Torbey Beats", {{P::Mode, Cloud}, {P::Size, 0.9f}, {P::Decay, 9.0f}, {P::LowCut, 200.0f}, {P::Mix, 0.45f}}},
-    {"DnB Snare Room", "Producers/Pat Osk", {{P::Mode, Chamber}, {P::Size, 0.35f}, {P::Decay, 0.9f}, {P::Early, 0.6f}, {P::Damping, 12000.0f}, {P::Mix, 0.3f}}},
-    {"Liquid Tail", "Producers/Pat Osk", {{P::Mode, Shimmer}, {P::Size, 0.8f}, {P::Decay, 5.5f}, {P::ShimPitch, 0.0f}, {P::ShimAmount, 0.3f}, {P::Duck, 0.4f}, {P::Mix, 0.35f}}},
-    {"Glitch Spring", "Producers/Pat Osk", {{P::Mode, Spring}, {P::Size, 0.3f}, {P::Decay, 1.5f}, {P::ModDepth, 0.9f}, {P::ModRate, 3.0f}, {P::Mix, 0.4f}}},
+    {"Vestuario del Centenario", "Producers/Torbey Beats", {{P::Mode, Plate}, {P::Sync, 1.0f}, {P::Div, 3.0f}, {P::Decay, 1.6f}, {P::Duck, 0.5f}, {P::LowCut, 250.0f}, {P::Mix, 0.3f}}},
+    {"Catedral de Montevideo 4 AM", "Producers/Torbey Beats", {{P::Mode, Hall}, {P::Size, 0.85f}, {P::Decay, 4.5f}, {P::Damping, 4500.0f}, {P::Sync, 1.0f}, {P::Div, 6.0f}, {P::Mix, 0.35f}}},
+    {"Niebla en Punta del Este", "Producers/Torbey Beats", {{P::Mode, Cloud}, {P::Size, 0.9f}, {P::Decay, 9.0f}, {P::LowCut, 200.0f}, {P::Mix, 0.45f}}},
+    {"Sala de Ensayo en Cordón", "Producers/Pat Osk", {{P::Mode, Chamber}, {P::Size, 0.35f}, {P::Decay, 0.9f}, {P::Early, 0.6f}, {P::Damping, 12000.0f}, {P::Mix, 0.3f}}},
+    {"Cola del Río de la Plata", "Producers/Pat Osk", {{P::Mode, Shimmer}, {P::Size, 0.8f}, {P::Decay, 5.5f}, {P::ShimPitch, 0.0f}, {P::ShimAmount, 0.3f}, {P::Duck, 0.4f}, {P::Mix, 0.35f}}},
+    {"Resorte del Ómnibus Viejo", "Producers/Pat Osk", {{P::Mode, Spring}, {P::Size, 0.3f}, {P::Decay, 1.5f}, {P::ModDepth, 0.9f}, {P::ModRate, 3.0f}, {P::Mix, 0.4f}}},
 };
 
 }  // namespace
@@ -68,7 +68,7 @@ juce::File Presets::userDirectory() {
 
 void Presets::rescan() {
     entries_.clear();
-    for (const auto& f : kFactory) entries_.push_back({f.name, f.category, true, {}});
+    for (const auto& f : kFactory) entries_.push_back({juce::String::fromUTF8(f.name), juce::String::fromUTF8(f.category), true, {}});  // names have accents
     numCode_ = static_cast<int>(entries_.size());
     const auto dir = userDirectory();
     auto files = dir.findChildFiles(juce::File::findFiles, true, "*.pvpreset");
