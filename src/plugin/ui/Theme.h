@@ -43,6 +43,8 @@ public:
     void positionComboBoxText(juce::ComboBox&, juce::Label&) override;
     juce::Font getPopupMenuFont() override { return font(13.5f); }
     void drawPopupMenuBackground(juce::Graphics&, int w, int h) override;
+    // Menus open inside the plugin window instead of as separate desktop windows.
+    juce::Component* getParentComponentForMenuOptions(const juce::PopupMenu::Options& o) override;
     void drawLinearSlider(juce::Graphics&, int x, int y, int w, int h, float pos, float, float, juce::Slider::SliderStyle,
                           juce::Slider&) override;
     void drawScrollbar(juce::Graphics&, juce::ScrollBar&, int x, int y, int w, int h, bool vertical, int thumbStart,

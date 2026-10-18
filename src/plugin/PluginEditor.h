@@ -30,4 +30,5 @@ private:
     std::unique_ptr<Content> content_;
     juce::TooltipWindow tooltips_{this, 600};
     int snapshotCountdown_ = -1;
+    int menuSkip_ = 0;  // throttles the refresh while a menu is open
 };

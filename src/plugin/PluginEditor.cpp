@@ -199,6 +199,9 @@ void PatVerbEditor::resized() {
 }
 
 void PatVerbEditor::timerCallback() {
+    // A menu or dialog is open: let it have the message thread, refresh at about 5 fps.
+    if (auto* mcm = juce::ModalComponentManager::getInstanceWithoutCreating(); mcm != nullptr && mcm->getNumModalComponents() > 0 && snapshotCountdown_ <= 0)
+        if (++menuSkip_ % 6 != 0) return;
     content_->tick();
     if (snapshotCountdown_ > 0 && --snapshotCountdown_ == 0) runSnapshot();
 }
