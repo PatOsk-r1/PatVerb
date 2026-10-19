@@ -1,6 +1,6 @@
 ; PatVerb installer (Inno Setup 6). Built by tools/package.ps1 (passes /DAppVersion and /DSourceDir).
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "3.1.4"
 #endif
 #ifndef SourceDir
   #define SourceDir "..\build\dist\PatVerb_artefacts\Release"
