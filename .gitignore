@@ -3,4 +3,3 @@ third_party/
 dist/
 *.user
 .vs/
-CLAUDE.md
